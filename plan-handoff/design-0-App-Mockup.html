@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Autonomous Banking Reconciliation Platform — App Mockup</title>
+<style>
+  :root{
+    --navy:#081b3a;--navy2:#102a54;--blue:#2563eb;--blue2:#dbeafe;
+    --ink:#10213d;--muted:#64748b;--line:#dbe3ee;--bg:#eef3f9;
+    --white:#fff;--green:#087a55;--greenbg:#dcfce7;--amber:#9a5b06;
+    --amberbg:#fff4cc;--red:#b42318;--redbg:#fee4e2;--slate:#475569;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#dfe7f1;color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,sans-serif}
+  .sheet{max-width:1480px;margin:30px auto;background:#f8fafc;border:1px solid #b8c4d3;box-shadow:0 18px 55px #17325322}
+  .sheet-label{height:42px;padding:11px 18px;background:#e8edf4;border-bottom:1px solid #c8d1dd;color:#41516a;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+  .app{display:grid;grid-template-columns:224px 1fr;min-height:830px;background:var(--bg)}
+  .sidebar{background:var(--navy);color:#d9e5f6;padding:22px 14px}
+  .brand{display:flex;gap:11px;align-items:center;padding:0 8px 23px;border-bottom:1px solid #ffffff1d}
+  .mark{width:34px;height:34px;display:grid;place-items:center;background:#2563eb;border-radius:8px;color:white;font-weight:900}
+  .brand b{display:block;color:white;font-size:14px}.brand span{font-size:10px;color:#9fb0ca}
+  .navgroup{margin:18px 8px 7px;color:#788ca9;text-transform:uppercase;font-size:9px;font-weight:900;letter-spacing:.12em}
+  .nav{display:flex;align-items:center;gap:10px;padding:9px 10px;margin:2px 0;border-radius:6px;color:#b9c8dc;font-size:12px}
+  .nav.active{background:#1b3d70;color:white}.nav .dot{width:7px;height:7px;border:1px solid currentColor;border-radius:2px}
+  .sidebar-foot{margin-top:25px;padding:12px;border:1px solid #ffffff1f;background:#ffffff09;border-radius:7px;font-size:10px;color:#a9bad0}
+  .main{min-width:0}.top{height:58px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 25px}
+  .crumb{font-weight:800;color:#1d3152}.topright{display:flex;align-items:center;gap:10px}
+  .search,.role,.iconbtn{border:1px solid var(--line);background:white;border-radius:6px;height:32px;display:flex;align-items:center;padding:0 11px;color:var(--muted);font-size:11px}
+  .search{width:200px}.iconbtn{width:32px;padding:0;justify-content:center}
+  .role b{color:var(--ink);margin-left:5px}.sim{background:#0c2a55;color:#d8e8ff;padding:8px 25px;font-size:10px;font-weight:800;letter-spacing:.06em}
+  .content{padding:22px 25px 28px}.titlebar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+  h1{font-size:23px;margin:0 0 3px;letter-spacing:-.02em}.sub{color:var(--muted);font-size:11px}.actions{display:flex;gap:8px}
+  button{border:0;border-radius:6px;padding:9px 13px;font-weight:800;font-size:11px;background:var(--blue);color:white}
+  button.secondary{background:white;color:#30445f;border:1px solid var(--line)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:white;border:1px solid var(--line);border-radius:8px}
+  .kpi{padding:15px}.kpi .label{font-size:10px;color:var(--muted);font-weight:800}.kpi .value{font-size:24px;font-weight:850;margin:8px 0 4px}.delta{font-size:10px;color:var(--green)}
+  .grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;margin-top:14px}.cardhead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .cardhead b{font-size:12px}.cardbody{padding:15px}.legend{display:flex;gap:13px;color:var(--muted);font-size:9px}.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}
+  .bars{display:flex;align-items:end;gap:14px;height:176px;padding:12px 8px 3px;border-bottom:1px solid var(--line);background:repeating-linear-gradient(to top,transparent 0,transparent 43px,#edf1f6 44px)}
+  .barset{display:flex;align-items:end;gap:3px;flex:1;height:100%}.bar{width:48%;background:#2d6cdf;border-radius:3px 3px 0 0}.bar.alt{background:#a9c6f5}
+  .queue{display:grid;gap:9px}.qrow{padding:10px;border:1px solid var(--line);border-radius:6px;display:grid;grid-template-columns:1fr auto;gap:3px}.qrow b{font-size:11px}.qrow small{color:var(--muted);font-size:9px}
+  .badge{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:4px 7px;font-size:9px;font-weight:850;white-space:nowrap}.green{color:var(--green);background:var(--greenbg)}.amber{color:var(--amber);background:var(--amberbg)}.red{color:var(--red);background:var(--redbg)}.blue{color:#1758bc;background:#e0ecff}.gray{color:#475569;background:#edf1f5}
+  .steps{display:flex;gap:6px;margin-bottom:14px}.step{flex:1;padding:9px 11px;background:white;border:1px solid var(--line);color:var(--muted);font-size:10px;font-weight:800}.step.on{border-color:#79a7ef;background:#eef5ff;color:#1758bc}
+  .uploadgrid{display:grid;grid-template-columns:.85fr 1.5fr;gap:14px}.drop{height:275px;border:1.5px dashed #8ca7c7;border-radius:8px;background:#f8fbff;display:grid;place-items:center;text-align:center;padding:35px}.uploadicon{font-size:31px;color:#3975d8}.seg{display:flex;background:#edf2f8;padding:3px;border-radius:6px;margin-bottom:12px}.seg span{flex:1;padding:7px;text-align:center;font-size:10px}.seg .on{background:white;border-radius:4px;font-weight:850;box-shadow:0 1px 3px #2338521c}
+  table{width:100%;border-collapse:collapse}th{text-align:left;padding:10px 9px;color:#66758b;font-size:9px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line);background:#f8fafc}td{padding:11px 9px;border-bottom:1px solid #e7ecf2;font-size:10px}td strong{font-size:10px}.num{text-align:right;font-variant-numeric:tabular-nums}
+  .filterbar{display:flex;gap:7px;padding:11px;border-bottom:1px solid var(--line)}.filter{padding:6px 9px;border:1px solid var(--line);border-radius:5px;color:var(--muted);font-size:9px}.filter.on{background:#e9f1ff;border-color:#a8c3ed;color:#1758bc;font-weight:850}
+  .workspace{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.casehead{padding:15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.detail{padding:16px}.pair{display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:8px}.record{border:1px solid var(--line);border-radius:7px;padding:12px}.record h3{font-size:11px;margin:0 0 9px}.field{display:flex;justify-content:space-between;padding:5px 0;color:var(--muted);font-size:9px}.field b{color:var(--ink)}.arrow{text-align:center;color:#6b87aa;font-size:18px}
+  .callout{margin-top:13px;padding:12px;border-left:3px solid #d58b17;background:#fff9e9;font-size:10px}.notes{width:100%;height:66px;border:1px solid var(--line);border-radius:6px;padding:9px;color:#8793a5;font:inherit;margin:10px 0}
+  .approval{border-top:1px solid var(--line);padding-top:12px;display:flex;justify-content:space-between;align-items:center}
+  .opsgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.live{display:flex;align-items:center;gap:7px;color:var(--green);font-size:10px;font-weight:850}.pulse{width:8px;height:8px;background:#17a673;border-radius:50%;box-shadow:0 0 0 4px #c9f3e4}
+  .timeline{padding:12px 16px}.event{display:grid;grid-template-columns:22px 1fr auto;gap:9px;padding:10px 0;border-bottom:1px solid #edf1f5}.eventicon{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:#e7effc;color:#245aa8;font-size:9px}.event b{font-size:10px}.event p{margin:2px 0;color:var(--muted);font-size:9px}.time{font-size:8px;color:#8b98aa}
+  .metricrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mini{padding:10px;border:1px solid var(--line);border-radius:6px}.mini b{display:block;font-size:17px}.mini span{font-size:8px;color:var(--muted)}
+  .hbar{margin:10px 0}.hbar label{display:flex;justify-content:space-between;font-size:9px;margin-bottom:4px}.track{height:7px;background:#edf1f5;border-radius:10px;overflow:hidden}.fill{height:100%;background:#3674dc}
+  @media(max-width:900px){.sheet{margin:10px}.app{grid-template-columns:62px 1fr}.sidebar{padding:15px 8px}.brand div:last-child,.nav span,.navgroup,.sidebar-foot{display:none}.brand{padding:0 4px 15px}.nav{justify-content:center}.kpis{grid-template-columns:repeat(2,1fr)}.grid2,.uploadgrid,.workspace,.opsgrid{grid-template-columns:1fr}.search{display:none}}
+</style>
+</head>
+<body>
+
+<section class="sheet">
+  <header class="sheet-label">Screen 1 of 4 · Executive Dashboard · Monitor reconciliation health and priority work</header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="mark">AR</div><div><b>Autonomous Recon</b><span>Banking Operations</span></div></div>
+      <div class="navgroup">Overview</div><div class="nav active"><i class="dot"></i><span>Executive Dashboard</span></div>
+      <div class="nav"><i class="dot"></i><span>File Upload</span></div><div class="nav"><i class="dot"></i><span>Reconciliation Centre</span></div><div class="nav"><i class="dot"></i><span>Invoice Processing</span></div>
+      <div class="navgroup">Operations</div><div class="nav"><i class="dot"></i><span>Exception Management</span></div><div class="nav"><i class="dot"></i><span>AI Agent Operations</span></div><div class="nav"><i class="dot"></i><span>Approval Centre</span></div>
+      <div class="navgroup">Governance</div><div class="nav"><i class="dot"></i><span>Reports & Analytics</span></div><div class="nav"><i class="dot"></i><span>Audit History</span></div><div class="nav"><i class="dot"></i><span>Settings</span></div>
+      <div class="sidebar-foot">Session mode<br><b style="color:white">Synthetic workspace</b></div>
+    </aside>
+    <main class="main">
+      <div class="top"><div class="crumb">Operations / Executive Dashboard</div><div class="topright"><div class="search">⌕ Search cases or references</div><div class="role">Role: <b>Analyst ▾</b></div><div class="iconbtn">◐</div><div class="iconbtn">?</div></div></div>
+      <div class="sim">◆ SIMULATION — SYNTHETIC DATA ONLY · NO PAYMENTS, BALANCES, OR LEDGERS ARE CONNECTED</div>
+      <div class="content">
+        <div class="titlebar"><div><h1>Reconciliation overview</h1><div class="sub">Synthetic operating position · Session AR-2418 · Updated 10:42 UTC</div></div><div class="actions"><button class="secondary">Download summary</button><button>Upload files</button></div></div>
+        <div class="kpis">
+          <div class="card kpi"><div class="label">RECONCILIATION RATE</div><div class="value">94.8%</div><div class="delta">↑ 2.1 pts vs prior run</div></div>
+          <div class="card kpi"><div class="label">MATCHED VALUE</div><div class="value">$8.42M</div><div class="delta">1,842 synthetic records</div></div>
+          <div class="card kpi"><div class="label">OPEN EXCEPTIONS</div><div class="value">37</div><div class="delta" style="color:#b42318">8 require attention</div></div>
+          <div class="card kpi"><div class="label">AWAITING APPROVAL</div><div class="value">12</div><div class="delta" style="color:#9a5b06">4 high-value cases</div></div>
+        </div>
+        <div class="grid2">
+          <div class="card"><div class="cardhead"><b>Seven-run reconciliation performance</b><div class="legend"><span><i style="background:#2d6cdf"></i>Matched</span><span><i style="background:#a9c6f5"></i>Exceptions</span></div></div><div class="cardbody"><div class="bars">
+            <div class="barset"><div class="bar" style="height:68%"></div><div class="bar alt" style="height:19%"></div></div><div class="barset"><div class="bar" style="height:75%"></div><div class="bar alt" style="height:16%"></div></div><div class="barset"><div class="bar" style="height:73%"></div><div class="bar alt" style="height:20%"></div></div><div class="barset"><div class="bar" style="height:82%"></div><div class="bar alt" style="height:13%"></div></div><div class="barset"><div class="bar" style="height:87%"></div><div class="bar alt" style="height:11%"></div></div><div class="barset"><div class="bar" style="height:91%"></div><div class="bar alt" style="height:9%"></div></div><div class="barset"><div class="bar" style="height:95%"></div><div class="bar alt" style="height:7%"></div></div>
+          </div></div></div>
+          <div class="card"><div class="cardhead"><b>Priority work queue</b><span class="badge blue">19 active</span></div><div class="cardbody queue">
+            <div class="qrow"><div><b>High-value approvals</b><small>Above synthetic $100K threshold</small></div><span class="badge red">4 urgent</span></div>
+            <div class="qrow"><div><b>Duplicate payment references</b><small>Potential duplicate clusters</small></div><span class="badge amber">7 review</span></div>
+            <div class="qrow"><div><b>Low-confidence suggestions</b><small>70–94% confidence</small></div><span class="badge amber">8 review</span></div>
+            <div class="qrow"><div><b>Agent processing status</b><small>Last run completed in 42s</small></div><span class="badge green">● healthy</span></div>
+          </div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<section class="sheet">
+  <header class="sheet-label">Screen 2 of 4 · File Upload & Reconciliation · Ingest synthetic records and inspect match results</header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="mark">AR</div><div><b>Autonomous Recon</b><span>Banking Operations</span></div></div>
+      <div class="navgroup">Overview</div><div class="nav"><i class="dot"></i><span>Executive Dashboard</span></div><div class="nav active"><i class="dot"></i><span>File Upload</span></div><div class="nav active" style="background:#102f5c"><i class="dot"></i><span>Reconciliation Centre</span></div><div class="nav"><i class="dot"></i><span>Invoice Processing</span></div>
+      <div class="navgroup">Operations</div><div class="nav"><i class="dot"></i><span>Exception Management</span></div><div class="nav"><i class="dot"></i><span>AI Agent Operations</span></div><div class="nav"><i class="dot"></i><span>Approval Centre</span></div>
+    </aside>
+    <main class="main">
+      <div class="top"><div class="crumb">Operations / File Upload</div><div class="topright"><div class="role">Role: <b>Analyst ▾</b></div><div class="iconbtn">◐</div></div></div>
+      <div class="sim">◆ SIMULATION — ONLY UPLOAD SYNTHETIC FILES · ACCEPTED: CSV, XLSX, PDF</div>
+      <div class="content">
+        <div class="titlebar"><div><h1>New reconciliation run</h1><div class="sub">Upload invoice and payment sources, validate extraction, then apply current rules.</div></div><button class="secondary">Load synthetic sample pack</button></div>
+        <div class="steps"><div class="step on">1 · Upload sources</div><div class="step on">2 · Validate records</div><div class="step on">3 · Match & reconcile</div><div class="step">4 · Review exceptions</div></div>
+        <div class="uploadgrid">
+          <div class="card cardbody">
+            <div class="seg"><span class="on">Invoice source</span><span>Payment source</span></div>
+            <div class="drop"><div><div class="uploadicon">⇧</div><b>Drop synthetic files here</b><p class="sub">CSV, Excel, or PDF · Multiple files supported</p><button>Choose files</button></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:12px"><span class="badge green">✓ 2 invoice files valid</span><span class="badge green">✓ 1 payment file valid</span></div>
+          </div>
+          <div class="card">
+            <div class="cardhead"><b>Reconciliation results</b><div class="actions"><button class="secondary">Export CSV</button><button>Run reconciliation</button></div></div>
+            <div class="filterbar"><span class="filter on">All 1,947</span><span class="filter">Exact 1,711</span><span class="filter">Tolerance 131</span><span class="filter">Suggested 68</span><span class="filter">Exceptions 37</span></div>
+            <table>
+              <thead><tr><th>Invoice / Payment</th><th>Vendor</th><th>Status</th><th>Confidence</th><th class="num">Variance</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><strong>INV-10482</strong><br><span class="sub">PAY-882914</span></td><td>Northstar Systems</td><td><span class="badge green">✓ Exact match</span></td><td>100%</td><td class="num">$0.00</td><td>›</td></tr>
+                <tr><td><strong>INV-10491</strong><br><span class="sub">PAY-883102</span></td><td>Meridian Data Ltd</td><td><span class="badge blue">≈ Tolerance</span></td><td>97%</td><td class="num">$42.18</td><td>›</td></tr>
+                <tr><td><strong>INV-10503</strong><br><span class="sub">PAY-883281</span></td><td>Atlas Infrastructure</td><td><span class="badge amber">! Approval</span></td><td>84%</td><td class="num">$86.20</td><td>›</td></tr>
+                <tr><td><strong>INV-10517</strong><br><span class="sub">No candidate</span></td><td>Blue Peak Advisory</td><td><span class="badge red">× Exception</span></td><td>—</td><td class="num">$12,450.00</td><td>›</td></tr>
+                <tr><td><strong>INV-10524</strong><br><span class="sub">PAY-883402</span></td><td>Crownline Services</td><td><span class="badge red">× Duplicate</span></td><td>61%</td><td class="num">$0.00</td><td>›</td></tr>
+              </tbody>
+            </table>
+            <div style="padding:11px 15px;color:#64748b;font-size:9px">Rules: 0.50% amount tolerance (max 100.00) · 3-day date window · Same currency only</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<section class="sheet">
+  <header class="sheet-label">Screen 3 of 4 · Exception & Approval Centre · Investigate evidence and record guarded human decisions</header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="mark">AR</div><div><b>Autonomous Recon</b><span>Banking Operations</span></div></div>
+      <div class="navgroup">Operations</div><div class="nav active"><i class="dot"></i><span>Exception Management</span></div><div class="nav"><i class="dot"></i><span>AI Agent Operations</span></div><div class="nav active" style="background:#102f5c"><i class="dot"></i><span>Approval Centre</span></div>
+      <div class="navgroup">Governance</div><div class="nav"><i class="dot"></i><span>Reports & Analytics</span></div><div class="nav"><i class="dot"></i><span>Audit History</span></div><div class="nav"><i class="dot"></i><span>Settings</span></div>
+      <div class="sidebar-foot">Selected role<br><b style="color:white">Approver · simulated</b></div>
+    </aside>
+    <main class="main">
+      <div class="top"><div class="crumb">Operations / Approval Centre / APR-0098</div><div class="topright"><div class="role">Role: <b>Approver ▾</b></div><div class="iconbtn">◐</div></div></div>
+      <div class="sim">◆ SIMULATED APPROVAL ONLY · THIS DECISION CANNOT RELEASE FUNDS OR POST TO A LEDGER</div>
+      <div class="content">
+        <div class="titlebar"><div><h1>Investigate sensitive match</h1><div class="sub">Case APR-0098 · High-value tolerance match · Created by Reconciliation Orchestrator</div></div><div class="actions"><span class="badge red">High risk</span><span class="badge amber">Human approval required</span></div></div>
+        <div class="workspace">
+          <div class="card">
+            <div class="casehead"><div><b>Source record comparison</b><div class="sub">84% confidence · 4 of 6 rules passed</div></div><span class="badge amber">Amount mismatch</span></div>
+            <div class="detail">
+              <div class="pair">
+                <div class="record"><h3>Invoice · INV-10503</h3><div class="field"><span>Vendor</span><b>Atlas Infrastructure</b></div><div class="field"><span>Date</span><b>18 Oct 2026</b></div><div class="field"><span>Amount</span><b>USD 126,840.00</b></div><div class="field"><span>Status</span><b>Approved</b></div></div>
+                <div class="arrow">⇄</div>
+                <div class="record"><h3>Payment · PAY-883281</h3><div class="field"><span>Payee</span><b>Atlas Infrastructure LLC</b></div><div class="field"><span>Date</span><b>20 Oct 2026</b></div><div class="field"><span>Amount</span><b>USD 126,753.80</b></div><div class="field"><span>Status</span><b>Settled · synthetic</b></div></div>
+              </div>
+              <div class="callout"><b>AI suggested resolution</b><br>Likely tolerance match. Vendor normalization and reference suffix agree; date variance is 2 days. Amount variance is USD 86.20 (0.068%), within configured tolerance, but the case exceeds the synthetic USD 100,000 sensitive-value threshold.</div>
+              <div style="margin-top:13px">
+                <span class="badge green">✓ Currency equal</span> <span class="badge green">✓ Date within 3 days</span> <span class="badge green">✓ Amount within tolerance</span> <span class="badge red">! High value</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="cardhead"><b>Human decision</b><span class="badge blue">Approver view</span></div>
+            <div class="cardbody">
+              <div class="sub">Decision note is required and will be added to this session’s synthetic audit history.</div>
+              <textarea class="notes">Reviewed source evidence and configured tolerance...</textarea>
+              <div class="record"><h3>Decision impact</h3><div class="field"><span>Workflow status</span><b>Suggested → Reconciled</b></div><div class="field"><span>Financial impact</span><b style="color:#087a55">None · simulation only</b></div><div class="field"><span>External posting</span><b>Disabled</b></div></div>
+              <div class="approval"><button class="secondary" style="color:#b42318">Reject match</button><div class="actions"><button class="secondary">Return to analyst</button><button>Approve simulated match</button></div></div>
+              <p class="sub" style="margin-top:12px">Confirmation will restate that no payment, balance, or ledger entry is changed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<section class="sheet">
+  <header class="sheet-label">Screen 4 of 4 · AI Agent Operations & Reports · Observe execution and export synthetic evidence</header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="mark">AR</div><div><b>Autonomous Recon</b><span>Banking Operations</span></div></div>
+      <div class="navgroup">Operations</div><div class="nav"><i class="dot"></i><span>Exception Management</span></div><div class="nav active"><i class="dot"></i><span>AI Agent Operations</span></div><div class="nav"><i class="dot"></i><span>Approval Centre</span></div>
+      <div class="navgroup">Governance</div><div class="nav active" style="background:#102f5c"><i class="dot"></i><span>Reports & Analytics</span></div><div class="nav"><i class="dot"></i><span>Audit History</span></div><div class="nav"><i class="dot"></i><span>Settings</span></div>
+    </aside>
+    <main class="main">
+      <div class="top"><div class="crumb">Governance / AI Agent Operations</div><div class="topright"><div class="role">Role: <b>Auditor ▾</b></div><div class="iconbtn">◐</div></div></div>
+      <div class="sim">◆ LIVE AGENT EVENTS MAY APPEAR DURING PROCESSING · ALL RECONCILIATION OUTPUTS REMAIN SIMULATED</div>
+      <div class="content">
+        <div class="titlebar"><div><h1>AI operations & evidence</h1><div class="sub">Execution run RUN-2026-118 · Read-only auditor view</div></div><div class="actions"><button class="secondary">Export audit CSV</button><button>Download reports</button></div></div>
+        <div class="opsgrid">
+          <div class="card">
+            <div class="cardhead"><b>Agent activity timeline</b><div class="live"><i class="pulse"></i> LIVE CONNECTION</div></div>
+            <div class="timeline">
+              <div class="event"><div class="eventicon">✓</div><div><b>Reconciliation Orchestrator started</b><p>Session linked and synthetic rule configuration loaded.</p></div><span class="time">10:41:02</span></div>
+              <div class="event"><div class="eventicon">↳</div><div><b>Invoice Extraction Agent · completed</b><p>1,947 records extracted · 11 missing-field flags · confidence 98.2%.</p></div><span class="time">10:41:14</span></div>
+              <div class="event"><div class="eventicon">↳</div><div><b>Payment Extraction Agent · completed</b><p>1,912 records extracted · 4 duplicate clusters identified.</p></div><span class="time">10:41:23</span></div>
+              <div class="event"><div class="eventicon">⚙</div><div><b>Rule evaluation · tool event</b><p>Amount cap, date window, duplicate and currency rules evaluated.</p></div><span class="time">10:41:31</span></div>
+              <div class="event"><div class="eventicon">✓</div><div><b>Match classification completed</b><p>1,711 exact · 131 tolerance · 68 suggested · 37 exceptions.</p></div><span class="time">10:41:44</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="card cardbody">
+              <div class="cardhead" style="padding:0 0 12px;border:0"><b>Run health</b><span class="badge green">✓ Completed</span></div>
+              <div class="metricrow"><div class="mini"><b>42s</b><span>RUN TIME</span></div><div class="mini"><b>98.2%</b><span>EXTRACTION</span></div><div class="mini"><b>0</b><span>FAILED AGENTS</span></div></div>
+              <div class="hbar"><label><span>Exact + tolerance match</span><b>94.8%</b></label><div class="track"><div class="fill" style="width:94.8%"></div></div></div>
+              <div class="hbar"><label><span>Human review routed</span><b>5.2%</b></label><div class="track"><div class="fill" style="width:5.2%;background:#d58b17"></div></div></div>
+            </div>
+            <div class="card" style="margin-top:14px">
+              <div class="cardhead"><b>Synthetic report package</b><span class="badge blue">4 files</span></div>
+              <div class="cardbody queue">
+                <div class="qrow"><div><b>Reconciliation results</b><small>SIMULATED · CSV · 1,947 rows</small></div><button class="secondary">Download</button></div>
+                <div class="qrow"><div><b>Exception register</b><small>SIMULATED · CSV · 37 rows</small></div><button class="secondary">Download</button></div>
+                <div class="qrow"><div><b>Approval decision log</b><small>SIMULATED · CSV · 12 rows</small></div><button class="secondary">Download</button></div>
+                <div class="qrow"><div><b>Executive summary</b><small>SIMULATED · Print-ready report</small></div><button class="secondary">Open</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+</body>
+</html>

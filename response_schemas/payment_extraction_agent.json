@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_name": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_name",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "result": {
+      "additionalProperties": false,
+      "properties": {
+        "extracted_payments": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "duplicate_candidate_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "eligible_for_automatic_reconciliation": {
+                "type": "boolean"
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "payee": {
+                "type": "string"
+              },
+              "payment_date": {
+                "type": "string"
+              },
+              "payment_reference": {
+                "type": "string"
+              },
+              "source_asset_id": {
+                "type": "string"
+              },
+              "source_evidence": {
+                "type": "string"
+              },
+              "transaction_status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "payment_reference",
+              "payee",
+              "payment_date",
+              "amount",
+              "currency",
+              "transaction_status",
+              "source_asset_id",
+              "source_evidence",
+              "missing_fields",
+              "duplicate_candidate_ids",
+              "eligible_for_automatic_reconciliation"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "requires_human_approval": {
+          "type": "boolean"
+        },
+        "source_assets_processed": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "synthetic_only": {
+          "type": "boolean"
+        },
+        "validation_flags": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "payment_reference": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "payment_reference",
+              "code",
+              "severity",
+              "message"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "extracted_payments",
+        "validation_flags",
+        "source_assets_processed",
+        "synthetic_only",
+        "requires_human_approval"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "success",
+        "error"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "result",
+    "metadata"
+  ],
+  "title": "Payment Extraction Agent Response",
+  "type": "object"
+}

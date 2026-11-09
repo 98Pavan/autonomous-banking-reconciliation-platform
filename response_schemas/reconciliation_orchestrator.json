@@ -1,0 +1,386 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_name": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_name",
+        "timestamp"
+      ],
+      "type": "object"
+    },
+    "result": {
+      "additionalProperties": false,
+      "properties": {
+        "approval_queue": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "case_id": {
+                "type": "string"
+              },
+              "case_type": {
+                "enum": [
+                  "match",
+                  "exception"
+                ],
+                "type": "string"
+              },
+              "decision_note_required": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "required_role": {
+                "type": "string"
+              },
+              "risk_level": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "case_id",
+              "case_type",
+              "reason",
+              "risk_level",
+              "required_role",
+              "decision_note_required"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "audit_events": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "actor": {
+                "type": "string"
+              },
+              "details": {
+                "type": "string"
+              },
+              "entity_id": {
+                "type": "string"
+              },
+              "event_type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "event_type",
+              "actor",
+              "entity_id",
+              "details"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "exceptions": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "approval_required": {
+                "type": "boolean"
+              },
+              "approval_status": {
+                "const": "awaiting_human_approval",
+                "type": "string"
+              },
+              "exception_id": {
+                "type": "string"
+              },
+              "invoice_number": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "payment_reference": {
+                "type": "string"
+              },
+              "reason_code": {
+                "type": "string"
+              },
+              "risk_flags": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "severity": {
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ],
+                "type": "string"
+              },
+              "suggested_resolution": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "exception_id",
+              "invoice_number",
+              "payment_reference",
+              "reason_code",
+              "severity",
+              "message",
+              "suggested_resolution",
+              "risk_flags",
+              "approval_required",
+              "approval_status"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "human_approval_mandatory": {
+          "type": "boolean"
+        },
+        "matches": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "amount_variance": {
+                "type": "number"
+              },
+              "approval_required": {
+                "type": "boolean"
+              },
+              "approval_status": {
+                "enum": [
+                  "awaiting_human_approval",
+                  "approved_simulated",
+                  "rejected_simulated",
+                  "returned_for_review",
+                  "not_required"
+                ],
+                "type": "string"
+              },
+              "classification": {
+                "enum": [
+                  "exact_match",
+                  "tolerance_match",
+                  "suggested_match",
+                  "exception"
+                ],
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "date_variance_days": {
+                "type": "integer"
+              },
+              "invoice_number": {
+                "type": "string"
+              },
+              "match_id": {
+                "type": "string"
+              },
+              "payment_reference": {
+                "type": "string"
+              },
+              "risk_flags": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "rule_evidence": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_asset_ids": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "match_id",
+              "invoice_number",
+              "payment_reference",
+              "classification",
+              "confidence",
+              "amount_variance",
+              "date_variance_days",
+              "currency",
+              "rule_evidence",
+              "risk_flags",
+              "source_asset_ids",
+              "approval_required",
+              "approval_status"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "rules_applied": {
+          "additionalProperties": false,
+          "properties": {
+            "amount_tolerance_cap": {
+              "type": "number"
+            },
+            "amount_tolerance_percent": {
+              "type": "number"
+            },
+            "auto_match_confidence": {
+              "type": "number"
+            },
+            "currency_policy": {
+              "const": "same_currency_only",
+              "type": "string"
+            },
+            "date_tolerance_days": {
+              "type": "integer"
+            },
+            "duplicate_detection": {
+              "type": "string"
+            },
+            "human_review_confidence_min": {
+              "type": "number"
+            },
+            "sensitive_value_threshold": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "amount_tolerance_percent",
+            "amount_tolerance_cap",
+            "date_tolerance_days",
+            "auto_match_confidence",
+            "human_review_confidence_min",
+            "sensitive_value_threshold",
+            "currency_policy",
+            "duplicate_detection"
+          ],
+          "type": "object"
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "sub_agents_used": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "summary": {
+          "additionalProperties": false,
+          "properties": {
+            "approval_count": {
+              "type": "integer"
+            },
+            "currency_breakdown": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "currency": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "currency",
+                  "value"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "exception_count": {
+              "type": "integer"
+            },
+            "invoice_count": {
+              "type": "integer"
+            },
+            "matched_count": {
+              "type": "integer"
+            },
+            "matched_value": {
+              "type": "number"
+            },
+            "payment_count": {
+              "type": "integer"
+            },
+            "reconciliation_rate": {
+              "type": "number"
+            },
+            "suggested_match_count": {
+              "type": "integer"
+            },
+            "tolerance_match_count": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "invoice_count",
+            "payment_count",
+            "matched_count",
+            "tolerance_match_count",
+            "suggested_match_count",
+            "exception_count",
+            "approval_count",
+            "matched_value",
+            "currency_breakdown",
+            "reconciliation_rate"
+          ],
+          "type": "object"
+        },
+        "synthetic_only": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "run_id",
+        "matches",
+        "exceptions",
+        "approval_queue",
+        "summary",
+        "rules_applied",
+        "sub_agents_used",
+        "synthetic_only",
+        "human_approval_mandatory",
+        "audit_events"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "success",
+        "error"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "status",
+    "result",
+    "metadata"
+  ],
+  "title": "Reconciliation Orchestrator Response",
+  "type": "object"
+}

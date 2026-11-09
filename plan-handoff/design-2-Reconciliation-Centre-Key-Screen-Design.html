@@ -1,0 +1,1351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autonomous Banking Reconciliation Platform — Reconciliation Centre</title>
+<style>
+  :root {
+    --navy-950:#071a36;
+    --navy-900:#0b2347;
+    --navy-800:#153766;
+    --blue-700:#175bcc;
+    --blue-600:#2563eb;
+    --blue-100:#dbeafe;
+    --blue-50:#eff6ff;
+    --slate-950:#142138;
+    --slate-700:#40516a;
+    --slate-600:#5f7088;
+    --slate-500:#7c8ba0;
+    --slate-300:#cbd5e1;
+    --slate-200:#dfe6ef;
+    --slate-100:#edf2f7;
+    --slate-50:#f7f9fc;
+    --white:#ffffff;
+    --green-700:#087a55;
+    --green-100:#dcfce7;
+    --amber-800:#925508;
+    --amber-100:#fff2c7;
+    --red-700:#b42318;
+    --red-100:#fee4e2;
+    --purple-700:#6652b8;
+    --purple-100:#ede9fe;
+    --shadow:0 8px 24px rgba(22,42,73,.08);
+  }
+
+  * { box-sizing:border-box; }
+
+  html, body { min-height:100%; }
+
+  body {
+    margin:0;
+    background:#dce5f0;
+    color:var(--slate-950);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size:13px;
+  }
+
+  button, input, select { font:inherit; }
+
+  button { cursor:pointer; }
+
+  .design-label {
+    max-width:1580px;
+    margin:18px auto 0;
+    padding:12px 18px;
+    background:#e9eef5;
+    border:1px solid #b8c5d5;
+    border-bottom:0;
+    color:#53647b;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  .app {
+    max-width:1580px;
+    min-height:940px;
+    margin:0 auto 24px;
+    display:grid;
+    grid-template-columns:232px minmax(0,1fr);
+    background:var(--slate-100);
+    border:1px solid #b8c5d5;
+    box-shadow:0 24px 70px rgba(22,44,76,.15);
+  }
+
+  .sidebar {
+    display:flex;
+    flex-direction:column;
+    min-height:940px;
+    padding:20px 13px 14px;
+    background:var(--navy-950);
+    color:#d5e1f1;
+  }
+
+  .brand {
+    display:flex;
+    align-items:center;
+    gap:11px;
+    min-height:51px;
+    padding:0 9px 18px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+  }
+
+  .brand-mark {
+    width:35px;
+    height:35px;
+    display:grid;
+    place-items:center;
+    border-radius:7px;
+    background:var(--blue-600);
+    color:white;
+    font-size:12px;
+    font-weight:900;
+    box-shadow:0 5px 14px rgba(37,99,235,.35);
+  }
+
+  .brand-name {
+    color:white;
+    font-size:12px;
+    font-weight:850;
+    line-height:1.25;
+  }
+
+  .brand-sub {
+    margin-top:2px;
+    color:#8fa4c1;
+    font-size:9px;
+  }
+
+  .nav-label {
+    margin:19px 10px 7px;
+    color:#7086a5;
+    font-size:8px;
+    font-weight:900;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+
+  .nav-item {
+    height:36px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:2px 0;
+    padding:0 10px;
+    border-radius:6px;
+    color:#b6c5d9;
+    font-size:10px;
+    font-weight:650;
+  }
+
+  .nav-item.active {
+    background:#183c70;
+    color:white;
+    box-shadow:inset 3px 0 0 #5f9cff;
+  }
+
+  .nav-icon {
+    width:16px;
+    height:16px;
+    display:grid;
+    place-items:center;
+    color:currentColor;
+    font-size:11px;
+  }
+
+  .nav-count {
+    margin-left:auto;
+    min-width:20px;
+    padding:2px 5px;
+    border-radius:9px;
+    background:rgba(255,255,255,.1);
+    text-align:center;
+    font-size:8px;
+  }
+
+  .sidebar-spacer { flex:1; }
+
+  .session-card {
+    margin:12px 2px 0;
+    padding:12px;
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:7px;
+    background:rgba(255,255,255,.05);
+  }
+
+  .session-card small {
+    display:block;
+    color:#8fa4c1;
+    font-size:8px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  .session-card b {
+    display:block;
+    margin:4px 0 7px;
+    color:#fff;
+    font-size:10px;
+  }
+
+  .session-status {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#a9ead4;
+    font-size:9px;
+  }
+
+  .session-dot {
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#38c990;
+    box-shadow:0 0 0 3px rgba(56,201,144,.12);
+  }
+
+  .main {
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .topbar {
+    height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:0 24px;
+    background:white;
+    border-bottom:1px solid var(--slate-200);
+  }
+
+  .breadcrumb {
+    color:var(--slate-600);
+    font-size:10px;
+  }
+
+  .breadcrumb b { color:var(--slate-950); }
+
+  .top-actions {
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .global-search {
+    width:220px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:0 10px;
+    border:1px solid var(--slate-200);
+    border-radius:6px;
+    color:var(--slate-500);
+    background:var(--slate-50);
+    font-size:9px;
+  }
+
+  .role-selector,
+  .icon-button {
+    height:32px;
+    border:1px solid var(--slate-200);
+    border-radius:6px;
+    background:white;
+    color:var(--slate-700);
+  }
+
+  .role-selector {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:0 10px;
+    font-size:9px;
+  }
+
+  .role-selector b { color:var(--slate-950); }
+
+  .icon-button {
+    width:32px;
+    display:grid;
+    place-items:center;
+  }
+
+  .simulation-banner {
+    min-height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:7px 24px;
+    background:var(--navy-900);
+    color:#d9e9ff;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:.055em;
+  }
+
+  .simulation-banner span:last-child {
+    color:#9db9dc;
+    font-weight:650;
+    letter-spacing:0;
+  }
+
+  .page-head {
+    padding:20px 24px 15px;
+  }
+
+  .page-title-row {
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+  }
+
+  h1 {
+    margin:0 0 4px;
+    color:var(--slate-950);
+    font-size:22px;
+    line-height:1.1;
+    letter-spacing:-.025em;
+  }
+
+  .page-subtitle {
+    color:var(--slate-600);
+    font-size:10px;
+  }
+
+  .button-row {
+    display:flex;
+    gap:8px;
+  }
+
+  .btn {
+    height:34px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:0 12px;
+    border:1px solid transparent;
+    border-radius:6px;
+    font-size:9px;
+    font-weight:800;
+  }
+
+  .btn-primary {
+    background:var(--blue-600);
+    color:white;
+    box-shadow:0 4px 10px rgba(37,99,235,.18);
+  }
+
+  .btn-secondary {
+    background:white;
+    border-color:var(--slate-200);
+    color:var(--slate-700);
+  }
+
+  .run-summary {
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:9px;
+    margin-top:15px;
+  }
+
+  .summary-card {
+    min-width:0;
+    padding:11px 12px;
+    background:white;
+    border:1px solid var(--slate-200);
+    border-radius:7px;
+  }
+
+  .summary-card .label {
+    color:var(--slate-500);
+    font-size:8px;
+    font-weight:850;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+
+  .summary-value {
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    margin-top:6px;
+  }
+
+  .summary-value b {
+    font-size:18px;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .summary-value small {
+    color:var(--slate-500);
+    font-size:8px;
+  }
+
+  .content {
+    min-height:0;
+    flex:1;
+    display:grid;
+    grid-template-columns:minmax(630px,1fr) 352px;
+    gap:12px;
+    padding:0 24px 24px;
+  }
+
+  .results-card,
+  .evidence-panel {
+    min-width:0;
+    background:white;
+    border:1px solid var(--slate-200);
+    border-radius:8px;
+    box-shadow:var(--shadow);
+  }
+
+  .toolbar {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px;
+    border-bottom:1px solid var(--slate-200);
+  }
+
+  .search-box {
+    width:218px;
+    height:31px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    padding:0 9px;
+    border:1px solid var(--slate-200);
+    border-radius:5px;
+    color:var(--slate-500);
+    font-size:9px;
+  }
+
+  .filters {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    min-width:0;
+  }
+
+  .filter {
+    height:29px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:0 9px;
+    border:1px solid var(--slate-200);
+    border-radius:5px;
+    background:white;
+    color:var(--slate-600);
+    font-size:8px;
+    white-space:nowrap;
+  }
+
+  .filter.active {
+    background:var(--blue-50);
+    border-color:#a9c5ef;
+    color:var(--blue-700);
+    font-weight:850;
+  }
+
+  .filter-count {
+    min-width:17px;
+    padding:1px 4px;
+    border-radius:8px;
+    background:rgba(37,99,235,.09);
+    text-align:center;
+  }
+
+  .rule-strip {
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:9px 12px;
+    background:#f8fafc;
+    border-bottom:1px solid var(--slate-200);
+    color:var(--slate-600);
+    font-size:8px;
+  }
+
+  .rule-strip b { color:var(--slate-950); }
+
+  .rule-chips {
+    display:flex;
+    gap:5px;
+  }
+
+  .rule-chip {
+    padding:3px 6px;
+    border-radius:4px;
+    background:white;
+    border:1px solid var(--slate-200);
+    white-space:nowrap;
+  }
+
+  table {
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+  }
+
+  th {
+    height:36px;
+    padding:0 9px;
+    text-align:left;
+    background:#fbfcfe;
+    border-bottom:1px solid var(--slate-200);
+    color:var(--slate-500);
+    font-size:7.5px;
+    font-weight:900;
+    letter-spacing:.045em;
+    text-transform:uppercase;
+  }
+
+  td {
+    height:58px;
+    padding:8px 9px;
+    border-bottom:1px solid #e8edf3;
+    color:var(--slate-700);
+    font-size:8.5px;
+    vertical-align:middle;
+  }
+
+  tr.selected td {
+    background:var(--blue-50);
+    border-bottom-color:#d4e4fb;
+  }
+
+  tr.selected td:first-child {
+    box-shadow:inset 3px 0 0 var(--blue-600);
+  }
+
+  .checkbox {
+    width:13px;
+    height:13px;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--slate-300);
+    border-radius:3px;
+    background:white;
+    color:white;
+    font-size:8px;
+  }
+
+  tr.selected .checkbox {
+    border-color:var(--blue-600);
+    background:var(--blue-600);
+  }
+
+  .record-id {
+    display:block;
+    color:var(--slate-950);
+    font-size:9px;
+    font-weight:850;
+  }
+
+  .record-sub {
+    display:block;
+    margin-top:2px;
+    color:var(--slate-500);
+    font-size:7.5px;
+  }
+
+  .vendor {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color:var(--slate-950);
+    font-weight:700;
+  }
+
+  .money,
+  .confidence {
+    color:var(--slate-950);
+    font-weight:800;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .variance {
+    font-variant-numeric:tabular-nums;
+  }
+
+  .variance.warning {
+    color:var(--amber-800);
+    font-weight:800;
+  }
+
+  .badge {
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:4px 6px;
+    border-radius:10px;
+    font-size:7.5px;
+    font-weight:850;
+    white-space:nowrap;
+  }
+
+  .badge.exact { color:var(--green-700); background:var(--green-100); }
+  .badge.tolerance { color:var(--blue-700); background:var(--blue-100); }
+  .badge.suggested { color:var(--amber-800); background:var(--amber-100); }
+  .badge.exception { color:var(--red-700); background:var(--red-100); }
+  .badge.agent { color:var(--purple-700); background:var(--purple-100); }
+
+  .confidence-bar {
+    width:55px;
+    height:4px;
+    margin-top:4px;
+    overflow:hidden;
+    border-radius:4px;
+    background:var(--slate-100);
+  }
+
+  .confidence-fill {
+    height:100%;
+    border-radius:4px;
+    background:var(--blue-600);
+  }
+
+  .row-action {
+    width:25px;
+    height:25px;
+    border:1px solid var(--slate-200);
+    border-radius:5px;
+    background:white;
+    color:var(--slate-600);
+  }
+
+  .pagination {
+    height:47px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    color:var(--slate-500);
+    font-size:8px;
+  }
+
+  .page-controls {
+    display:flex;
+    gap:5px;
+  }
+
+  .page-button {
+    min-width:25px;
+    height:25px;
+    padding:0 7px;
+    border:1px solid var(--slate-200);
+    border-radius:5px;
+    background:white;
+    color:var(--slate-600);
+    font-size:8px;
+  }
+
+  .page-button.active {
+    background:var(--navy-900);
+    border-color:var(--navy-900);
+    color:white;
+  }
+
+  .evidence-panel {
+    overflow:hidden;
+  }
+
+  .panel-head {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    padding:14px;
+    border-bottom:1px solid var(--slate-200);
+  }
+
+  .panel-eyebrow {
+    color:var(--slate-500);
+    font-size:7.5px;
+    font-weight:850;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  .panel-head h2 {
+    margin:4px 0 3px;
+    font-size:14px;
+  }
+
+  .panel-head p {
+    margin:0;
+    color:var(--slate-500);
+    font-size:8px;
+  }
+
+  .close {
+    width:27px;
+    height:27px;
+    border:1px solid var(--slate-200);
+    border-radius:5px;
+    background:white;
+    color:var(--slate-600);
+  }
+
+  .panel-section {
+    padding:13px 14px;
+    border-bottom:1px solid var(--slate-200);
+  }
+
+  .section-title {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:9px;
+  }
+
+  .section-title b {
+    font-size:9px;
+  }
+
+  .section-title span {
+    color:var(--slate-500);
+    font-size:7.5px;
+  }
+
+  .comparison {
+    display:grid;
+    grid-template-columns:1fr 18px 1fr;
+    gap:7px;
+    align-items:stretch;
+  }
+
+  .source-card {
+    padding:9px;
+    border:1px solid var(--slate-200);
+    border-radius:6px;
+    background:var(--slate-50);
+  }
+
+  .source-type {
+    color:var(--slate-500);
+    font-size:7px;
+    font-weight:900;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  .source-card h3 {
+    margin:4px 0 8px;
+    color:var(--slate-950);
+    font-size:9px;
+  }
+
+  .source-field {
+    display:flex;
+    justify-content:space-between;
+    gap:6px;
+    padding:3px 0;
+    color:var(--slate-500);
+    font-size:7px;
+  }
+
+  .source-field strong {
+    max-width:70px;
+    overflow:hidden;
+    color:var(--slate-950);
+    text-align:right;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .compare-arrow {
+    display:grid;
+    place-items:center;
+    color:var(--blue-600);
+    font-weight:900;
+  }
+
+  .reason {
+    display:grid;
+    grid-template-columns:17px 1fr auto;
+    gap:7px;
+    align-items:center;
+    padding:6px 0;
+    border-bottom:1px solid #edf1f5;
+  }
+
+  .reason:last-child { border-bottom:0; }
+
+  .reason-icon {
+    width:17px;
+    height:17px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    font-size:8px;
+    font-weight:900;
+  }
+
+  .reason-icon.pass {
+    color:var(--green-700);
+    background:var(--green-100);
+  }
+
+  .reason-icon.review {
+    color:var(--amber-800);
+    background:var(--amber-100);
+  }
+
+  .reason b {
+    display:block;
+    color:var(--slate-950);
+    font-size:8px;
+  }
+
+  .reason small {
+    display:block;
+    margin-top:1px;
+    color:var(--slate-500);
+    font-size:7px;
+  }
+
+  .reason-value {
+    color:var(--slate-700);
+    font-size:7.5px;
+    font-weight:800;
+    text-align:right;
+  }
+
+  .ai-callout {
+    padding:10px;
+    border-left:3px solid var(--purple-700);
+    border-radius:3px;
+    background:var(--purple-100);
+    color:#4b4472;
+    font-size:8px;
+    line-height:1.45;
+  }
+
+  .ai-callout-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:5px;
+  }
+
+  .ai-callout-head b {
+    color:#3f356f;
+    font-size:8.5px;
+  }
+
+  .safety-note {
+    margin-top:8px;
+    padding:8px;
+    border:1px solid #f3c3bf;
+    border-radius:5px;
+    background:#fff6f5;
+    color:#8a3c35;
+    font-size:7.5px;
+    line-height:1.4;
+  }
+
+  .panel-actions {
+    padding:13px 14px;
+    background:#fbfcfe;
+  }
+
+  .panel-actions .btn {
+    width:100%;
+    margin-bottom:7px;
+  }
+
+  .panel-actions .btn:last-child { margin-bottom:0; }
+
+  .agent-dock {
+    position:absolute;
+    right:29px;
+    bottom:28px;
+    width:244px;
+    border:1px solid #b6c5d8;
+    border-radius:8px;
+    overflow:hidden;
+    background:white;
+    box-shadow:0 16px 42px rgba(20,43,75,.22);
+  }
+
+  .agent-dock-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:9px 11px;
+    background:var(--navy-900);
+    color:white;
+  }
+
+  .agent-dock-head b { font-size:8.5px; }
+
+  .live {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    color:#aee8d5;
+    font-size:7px;
+    font-weight:850;
+  }
+
+  .live-dot {
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#34d399;
+  }
+
+  .agent-event {
+    display:grid;
+    grid-template-columns:17px 1fr;
+    gap:6px;
+    padding:8px 10px;
+    border-bottom:1px solid var(--slate-100);
+  }
+
+  .agent-event:last-child { border-bottom:0; }
+
+  .event-dot {
+    width:16px;
+    height:16px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:var(--blue-100);
+    color:var(--blue-700);
+    font-size:7px;
+  }
+
+  .agent-event b {
+    display:block;
+    font-size:7.5px;
+  }
+
+  .agent-event small {
+    display:block;
+    margin-top:2px;
+    color:var(--slate-500);
+    font-size:6.8px;
+  }
+
+  .screen-wrap {
+    position:relative;
+    min-height:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+
+  @media (max-width:1120px) {
+    .app { grid-template-columns:68px minmax(0,1fr); }
+    .brand > div:last-child,
+    .nav-item span,
+    .nav-label,
+    .session-card { display:none; }
+    .brand { justify-content:center; padding-left:0; padding-right:0; }
+    .nav-item { justify-content:center; }
+    .nav-count { display:none; }
+    .content { grid-template-columns:minmax(560px,1fr) 320px; }
+    .global-search { display:none; }
+  }
+
+  @media (max-width:900px) {
+    .content { display:block; overflow-x:auto; }
+    .results-card { min-width:720px; }
+    .evidence-panel { min-width:720px; margin-top:12px; }
+    .run-summary { grid-template-columns:repeat(3,1fr); }
+    .agent-dock { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="design-label">Key Screen · Reconciliation Centre · Review, explain, and route invoice-to-payment matching results</div>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">AR</div>
+      <div>
+        <div class="brand-name">Autonomous Recon</div>
+        <div class="brand-sub">Banking Operations</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Overview</div>
+    <div class="nav-item"><span class="nav-icon">▦</span><span>Executive Dashboard</span></div>
+    <div class="nav-item"><span class="nav-icon">⇧</span><span>File Upload</span></div>
+    <div class="nav-item active"><span class="nav-icon">⇄</span><span>Reconciliation Centre</span><span class="nav-count">37</span></div>
+    <div class="nav-item"><span class="nav-icon">▤</span><span>Invoice Processing</span></div>
+
+    <div class="nav-label">Operations</div>
+    <div class="nav-item"><span class="nav-icon">!</span><span>Exception Management</span><span class="nav-count">37</span></div>
+    <div class="nav-item"><span class="nav-icon">◎</span><span>AI Agent Operations</span></div>
+    <div class="nav-item"><span class="nav-icon">✓</span><span>Approval Centre</span><span class="nav-count">12</span></div>
+
+    <div class="nav-label">Governance</div>
+    <div class="nav-item"><span class="nav-icon">⌁</span><span>Reports & Analytics</span></div>
+    <div class="nav-item"><span class="nav-icon">◷</span><span>Audit History</span></div>
+    <div class="nav-item"><span class="nav-icon">⚙</span><span>Settings</span></div>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="session-card">
+      <small>Current workspace</small>
+      <b>Session AR-2418</b>
+      <div class="session-status"><i class="session-dot"></i> Synthetic data active</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="breadcrumb">Operations &nbsp;/&nbsp; <b>Reconciliation Centre</b></div>
+      <div class="top-actions">
+        <div class="global-search">⌕ &nbsp; Search invoice, payment, or vendor</div>
+        <button class="role-selector">Role: <b>Analyst</b>⌄</button>
+        <button class="icon-button" aria-label="Toggle theme">◐</button>
+        <button class="icon-button" aria-label="Notifications">◌</button>
+      </div>
+    </div>
+
+    <div class="simulation-banner">
+      <span>◆ SIMULATION — SYNTHETIC DATA ONLY · NO PAYMENTS, BALANCES, OR LEDGERS ARE CONNECTED</span>
+      <span>Session-only data · Refresh clears this workspace</span>
+    </div>
+
+    <div class="screen-wrap">
+      <section class="page-head">
+        <div class="page-title-row">
+          <div>
+            <h1>Reconciliation Centre</h1>
+            <div class="page-subtitle">Run RUN-2026-118 · Processed 1,947 synthetic invoice and payment records · 08 Nov 2026, 10:42 UTC</div>
+          </div>
+          <div class="button-row">
+            <button class="btn btn-secondary">↓ Export simulated CSV</button>
+            <button class="btn btn-secondary">⚙ Review rules</button>
+            <button class="btn btn-primary">↻ Run reconciliation</button>
+          </div>
+        </div>
+
+        <div class="run-summary">
+          <div class="summary-card">
+            <div class="label">Reconciliation rate</div>
+            <div class="summary-value"><b>94.8%</b><small>↑ 2.1 pts</small></div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Exact matches</div>
+            <div class="summary-value"><b>1,711</b><small>87.9%</small></div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Tolerance matches</div>
+            <div class="summary-value"><b>131</b><small>6.7%</small></div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Suggested matches</div>
+            <div class="summary-value"><b>68</b><small>Review</small></div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Open exceptions</div>
+            <div class="summary-value"><b style="color:var(--red-700)">37</b><small>8 urgent</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content">
+        <div class="results-card">
+          <div class="toolbar">
+            <div class="search-box">⌕ &nbsp; Search these results</div>
+            <div class="filters">
+              <button class="filter active">All <span class="filter-count">1,947</span></button>
+              <button class="filter">Exact <span class="filter-count">1,711</span></button>
+              <button class="filter">Tolerance <span class="filter-count">131</span></button>
+              <button class="filter">Suggested <span class="filter-count">68</span></button>
+              <button class="filter">Exceptions <span class="filter-count">37</span></button>
+              <button class="filter">More filters ⌄</button>
+            </div>
+          </div>
+
+          <div class="rule-strip">
+            <div><b>Active policy:</b> Rules-based tolerance v3</div>
+            <div class="rule-chips">
+              <span class="rule-chip">Amount ≤ 0.50%</span>
+              <span class="rule-chip">Cap 100.00</span>
+              <span class="rule-chip">Date ±3 days</span>
+              <span class="rule-chip">Same currency</span>
+            </div>
+          </div>
+
+          <table aria-label="Synthetic reconciliation results">
+            <colgroup>
+              <col style="width:32px">
+              <col style="width:114px">
+              <col style="width:112px">
+              <col style="width:108px">
+              <col style="width:91px">
+              <col style="width:77px">
+              <col style="width:78px">
+              <col style="width:74px">
+              <col style="width:61px">
+              <col style="width:32px">
+            </colgroup>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Invoice / Payment</th>
+                <th>Vendor</th>
+                <th>Match status</th>
+                <th>Amount</th>
+                <th>Variance</th>
+                <th>Confidence</th>
+                <th>Rule flags</th>
+                <th>Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="checkbox"></span></td>
+                <td><span class="record-id">INV-10482</span><span class="record-sub">PAY-882914</span></td>
+                <td><div class="vendor">Northstar Systems</div><span class="record-sub">USD · 18 Oct</span></td>
+                <td><span class="badge exact">✓ Exact match</span></td>
+                <td><span class="money">USD 42,180.00</span></td>
+                <td><span class="variance">$0.00</span></td>
+                <td><span class="confidence">100%</span><div class="confidence-bar"><div class="confidence-fill" style="width:100%;background:var(--green-700)"></div></div></td>
+                <td><span class="badge exact">6/6 pass</span></td>
+                <td>10:41</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+
+              <tr>
+                <td><span class="checkbox"></span></td>
+                <td><span class="record-id">INV-10491</span><span class="record-sub">PAY-883102</span></td>
+                <td><div class="vendor">Meridian Data Ltd</div><span class="record-sub">USD · 19 Oct</span></td>
+                <td><span class="badge tolerance">≈ Tolerance</span></td>
+                <td><span class="money">USD 18,420.00</span></td>
+                <td><span class="variance">$42.18</span></td>
+                <td><span class="confidence">97%</span><div class="confidence-bar"><div class="confidence-fill" style="width:97%"></div></div></td>
+                <td><span class="badge tolerance">5/6 pass</span></td>
+                <td>10:41</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+
+              <tr class="selected">
+                <td><span class="checkbox">✓</span></td>
+                <td><span class="record-id">INV-10503</span><span class="record-sub">PAY-883281</span></td>
+                <td><div class="vendor">Atlas Infrastructure</div><span class="record-sub">USD · 20 Oct</span></td>
+                <td><span class="badge suggested">! Approval</span></td>
+                <td><span class="money">USD 126,840.00</span></td>
+                <td><span class="variance warning">$86.20</span></td>
+                <td><span class="confidence">84%</span><div class="confidence-bar"><div class="confidence-fill" style="width:84%;background:#d58b17"></div></div></td>
+                <td><span class="badge suggested">High value</span></td>
+                <td>10:41</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+
+              <tr>
+                <td><span class="checkbox"></span></td>
+                <td><span class="record-id">INV-10517</span><span class="record-sub">No candidate</span></td>
+                <td><div class="vendor">Blue Peak Advisory</div><span class="record-sub">EUR · 21 Oct</span></td>
+                <td><span class="badge exception">× Exception</span></td>
+                <td><span class="money">EUR 12,450.00</span></td>
+                <td><span class="variance">—</span></td>
+                <td><span class="confidence">—</span></td>
+                <td><span class="badge exception">No payment</span></td>
+                <td>10:40</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+
+              <tr>
+                <td><span class="checkbox"></span></td>
+                <td><span class="record-id">INV-10524</span><span class="record-sub">PAY-883402</span></td>
+                <td><div class="vendor">Crownline Services</div><span class="record-sub">GBP · 21 Oct</span></td>
+                <td><span class="badge exception">× Duplicate</span></td>
+                <td><span class="money">GBP 7,920.00</span></td>
+                <td><span class="variance">£0.00</span></td>
+                <td><span class="confidence">61%</span><div class="confidence-bar"><div class="confidence-fill" style="width:61%;background:var(--red-700)"></div></div></td>
+                <td><span class="badge exception">2 references</span></td>
+                <td>10:40</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+
+              <tr>
+                <td><span class="checkbox"></span></td>
+                <td><span class="record-id">INV-10531</span><span class="record-sub">PAY-883511</span></td>
+                <td><div class="vendor">Harbour Technology</div><span class="record-sub">USD · 22 Oct</span></td>
+                <td><span class="badge tolerance">≈ Tolerance</span></td>
+                <td><span class="money">USD 9,640.50</span></td>
+                <td><span class="variance">$18.50</span></td>
+                <td><span class="confidence">96%</span><div class="confidence-bar"><div class="confidence-fill" style="width:96%"></div></div></td>
+                <td><span class="badge tolerance">Date +2d</span></td>
+                <td>10:40</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+
+              <tr>
+                <td><span class="checkbox"></span></td>
+                <td><span class="record-id">INV-10542</span><span class="record-sub">PAY-883602</span></td>
+                <td><div class="vendor">Sterling Office Group</div><span class="record-sub">EUR · 22 Oct</span></td>
+                <td><span class="badge exact">✓ Exact match</span></td>
+                <td><span class="money">EUR 4,280.00</span></td>
+                <td><span class="variance">€0.00</span></td>
+                <td><span class="confidence">100%</span><div class="confidence-bar"><div class="confidence-fill" style="width:100%;background:var(--green-700)"></div></div></td>
+                <td><span class="badge exact">6/6 pass</span></td>
+                <td>10:39</td>
+                <td><button class="row-action">›</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="pagination">
+            <span>Showing 1–7 of 1,947 synthetic records</span>
+            <div class="page-controls">
+              <button class="page-button">‹</button>
+              <button class="page-button active">1</button>
+              <button class="page-button">2</button>
+              <button class="page-button">3</button>
+              <button class="page-button">…</button>
+              <button class="page-button">279</button>
+              <button class="page-button">›</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="evidence-panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-eyebrow">Selected match · APR-0098</div>
+              <h2>INV-10503 ⇄ PAY-883281</h2>
+              <p>Suggested tolerance match · Human approval required</p>
+            </div>
+            <button class="close" aria-label="Close details">×</button>
+          </div>
+
+          <div class="panel-section">
+            <div class="section-title">
+              <b>Source comparison</b>
+              <span class="badge suggested">84% confidence</span>
+            </div>
+
+            <div class="comparison">
+              <div class="source-card">
+                <div class="source-type">Invoice</div>
+                <h3>INV-10503</h3>
+                <div class="source-field"><span>Vendor</span><strong>Atlas Infrastructure</strong></div>
+                <div class="source-field"><span>Date</span><strong>18 Oct 2026</strong></div>
+                <div class="source-field"><span>Amount</span><strong>USD 126,840.00</strong></div>
+                <div class="source-field"><span>Status</span><strong>Approved</strong></div>
+              </div>
+
+              <div class="compare-arrow">⇄</div>
+
+              <div class="source-card">
+                <div class="source-type">Payment</div>
+                <h3>PAY-883281</h3>
+                <div class="source-field"><span>Payee</span><strong>Atlas Infrastructure LLC</strong></div>
+                <div class="source-field"><span>Date</span><strong>20 Oct 2026</strong></div>
+                <div class="source-field"><span>Amount</span><strong>USD 126,753.80</strong></div>
+                <div class="source-field"><span>Status</span><strong>Settled · simulated</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-section">
+            <div class="section-title">
+              <b>Rule evidence</b>
+              <span>4 passed · 2 review</span>
+            </div>
+
+            <div class="reason">
+              <span class="reason-icon pass">✓</span>
+              <div><b>Currency equality</b><small>Required for automatic matching</small></div>
+              <span class="reason-value">USD = USD</span>
+            </div>
+
+            <div class="reason">
+              <span class="reason-icon pass">✓</span>
+              <div><b>Date tolerance</b><small>Configured window: ±3 days</small></div>
+              <span class="reason-value">+2 days</span>
+            </div>
+
+            <div class="reason">
+              <span class="reason-icon pass">✓</span>
+              <div><b>Amount tolerance</b><small>0.50%, capped at 100.00</small></div>
+              <span class="reason-value">0.068%</span>
+            </div>
+
+            <div class="reason">
+              <span class="reason-icon pass">✓</span>
+              <div><b>Vendor normalization</b><small>Legal suffix removed for comparison</small></div>
+              <span class="reason-value">Strong</span>
+            </div>
+
+            <div class="reason">
+              <span class="reason-icon review">!</span>
+              <div><b>Reference agreement</b><small>Partial suffix agreement only</small></div>
+              <span class="reason-value">Partial</span>
+            </div>
+
+            <div class="reason">
+              <span class="reason-icon review">!</span>
+              <div><b>Sensitive-value threshold</b><small>Review required above USD 100,000</small></div>
+              <span class="reason-value">Exceeded</span>
+            </div>
+          </div>
+
+          <div class="panel-section">
+            <div class="section-title">
+              <b>AI recommendation</b>
+              <span class="badge agent">Reconciliation Orchestrator</span>
+            </div>
+
+            <div class="ai-callout">
+              <div class="ai-callout-head">
+                <b>Likely tolerance match</b>
+                <span>84%</span>
+              </div>
+              Vendor normalization, currency, date, and amount rules support the match. The partial reference and high synthetic value prevent automatic reconciliation. Route to a human approver with source evidence.
+            </div>
+
+            <div class="safety-note">
+              <b>Simulation safeguard:</b> routing or approving this case changes only its session workflow status. It cannot release funds, modify a balance, or post to a ledger.
+            </div>
+          </div>
+
+          <div class="panel-actions">
+            <button class="btn btn-primary">Route to Approval Centre</button>
+            <button class="btn btn-secondary">Open exception investigation</button>
+          </div>
+        </aside>
+      </section>
+
+      <div class="agent-dock">
+        <div class="agent-dock-head">
+          <b>AI Agent Activity</b>
+          <span class="live"><i class="live-dot"></i> LIVE</span>
+        </div>
+        <div class="agent-event">
+          <span class="event-dot">✓</span>
+          <div><b>Match classification complete</b><small>1,947 records evaluated against active rules.</small></div>
+        </div>
+        <div class="agent-event">
+          <span class="event-dot">!</span>
+          <div><b>Human review routes created</b><small>68 suggestions and 12 sensitive cases queued.</small></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

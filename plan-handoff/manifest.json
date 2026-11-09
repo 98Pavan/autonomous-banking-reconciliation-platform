@@ -1,0 +1,11 @@
+{
+  "written_at": "2026-11-08T06:00:59.010478",
+  "files": [
+    "prd.md",
+    "design-0-App-Mockup.html",
+    "design-1-Application-Workflow-Diagram.html",
+    "design-2-Reconciliation-Centre-Key-Screen-Design.html",
+    "wireframe-0-Application-Workflow-Diagram.html"
+  ],
+  "plan_dir": "/app/nextjs-project/plan-handoff"
+}

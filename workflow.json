@@ -1,0 +1,110 @@
+{
+  "nodes": [
+    {
+      "id": "input",
+      "type": "Input",
+      "label": "User Query",
+      "nodeCategory": "input"
+    },
+    {
+      "id": "manager",
+      "type": "Agent",
+      "label": "Run Reconciliation",
+      "description": "Hosted manager agent that delegates invoice and payment extraction, applies tolerance rules, and returns UI reconciliation results",
+      "nodeCategory": "agent",
+      "agent_id": "6af010dd78d9684655581186"
+    },
+    {
+      "id": "invoice_extraction",
+      "type": "Agent",
+      "label": "Invoice Extraction Agent",
+      "description": "Extracts and normalizes synthetic invoice fields and flags missing or duplicate invoice data.",
+      "nodeCategory": "agent",
+      "agent_id": "6af010bd3e6052e6faedb126"
+    },
+    {
+      "id": "payment_extraction",
+      "type": "Agent",
+      "label": "Payment Extraction Agent",
+      "description": "Extracts and normalizes synthetic payment fields and flags missing or duplicate payment data.",
+      "nodeCategory": "agent",
+      "agent_id": "6af010c9752c99503d84481d"
+    },
+    {
+      "id": "output",
+      "type": "Output",
+      "label": "Reconciliation Results",
+      "nodeCategory": "end"
+    }
+  ],
+  "edges": [
+    {
+      "source": "input",
+      "target": "manager"
+    },
+    {
+      "source": "manager",
+      "target": "invoice_extraction"
+    },
+    {
+      "source": "manager",
+      "target": "payment_extraction"
+    },
+    {
+      "source": "invoice_extraction",
+      "target": "output"
+    },
+    {
+      "source": "payment_extraction",
+      "target": "output"
+    }
+  ],
+  "agents": [
+    {
+      "agent_id": "6af010bd3e6052e6faedb126",
+      "name": "Invoice Extraction Agent",
+      "description": "Extracts and normalizes synthetic invoice fields, source evidence, missing-field flags, and duplicate candidates.",
+      "type": "hosted",
+      "workflow_node_id": "invoice_extraction",
+      "provider_id": "Anthropic",
+      "model": "anthropic/claude-sonnet-4-6",
+      "temperature": 0,
+      "top_p": 0.9
+    },
+    {
+      "agent_id": "6af010c9752c99503d84481d",
+      "name": "Payment Extraction Agent",
+      "description": "Extracts and normalizes synthetic payment fields, source evidence, missing-field flags, duplicate candidates, and eligibility.",
+      "type": "hosted",
+      "workflow_node_id": "payment_extraction",
+      "provider_id": "Anthropic",
+      "model": "anthropic/claude-sonnet-4-6",
+      "temperature": 0,
+      "top_p": 0.9
+    },
+    {
+      "agent_id": "6af010dd78d9684655581186",
+      "name": "Reconciliation Orchestrator",
+      "description": "Coordinates invoice and payment extraction, applies tolerance rules, and returns safe UI reconciliation results with mandatory human approval routing.",
+      "type": "hosted",
+      "workflow_node_id": "manager",
+      "workflow_node_label": "Run Reconciliation",
+      "provider_id": "Anthropic",
+      "model": "anthropic/claude-sonnet-4-6",
+      "temperature": 0.1,
+      "top_p": 0.9,
+      "managed_agents": [
+        {
+          "id": "6af010bd3e6052e6faedb126",
+          "name": "Invoice Extraction Agent",
+          "usage_description": "Delegate here when synthetic invoice PDF, CSV, or XLSX assets need field extraction, normalization, missing-field validation, or duplicate-invoice detection."
+        },
+        {
+          "id": "6af010c9752c99503d84481d",
+          "name": "Payment Extraction Agent",
+          "usage_description": "Delegate here when synthetic payment CSV, XLSX, or PDF assets need field extraction, normalization, transaction-status validation, or duplicate-payment detection."
+        }
+      ]
+    }
+  ]
+}

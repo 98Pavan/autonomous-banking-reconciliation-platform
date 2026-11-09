@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autonomous Banking Reconciliation Platform — Workflow</title>
+<style>
+  :root {
+    --navy:#081b3a;
+    --navy-2:#123566;
+    --blue:#2563eb;
+    --blue-soft:#eaf2ff;
+    --ink:#13233e;
+    --muted:#64748b;
+    --line:#cbd7e6;
+    --surface:#ffffff;
+    --canvas:#edf3f9;
+    --green:#087a55;
+    --green-soft:#e4f8ef;
+    --amber:#9a5b06;
+    --amber-soft:#fff5d9;
+    --red:#b42318;
+    --red-soft:#fee9e7;
+    --violet:#6652b8;
+    --violet-soft:#f0edff;
+  }
+
+  * { box-sizing:border-box; }
+
+  body {
+    margin:0;
+    background:var(--canvas);
+    color:var(--ink);
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+
+  .page {
+    width:min(1500px, calc(100% - 32px));
+    margin:16px auto;
+    background:var(--surface);
+    border:1px solid #b9c8da;
+    box-shadow:0 18px 55px rgba(20,45,78,.12);
+  }
+
+  header {
+    background:var(--navy);
+    color:white;
+    padding:22px 28px;
+    display:flex;
+    justify-content:space-between;
+    gap:24px;
+    align-items:center;
+  }
+
+  header h1 {
+    margin:0 0 5px;
+    font-size:22px;
+    letter-spacing:-.02em;
+  }
+
+  header p {
+    margin:0;
+    color:#b9cbe4;
+    font-size:12px;
+  }
+
+  .simulation {
+    background:#173d72;
+    border:1px solid #4b75aa;
+    color:#e1edff;
+    border-radius:6px;
+    padding:9px 12px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.05em;
+    white-space:nowrap;
+  }
+
+  .legend {
+    padding:12px 28px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    background:#f8fafc;
+    font-size:10px;
+    color:var(--muted);
+  }
+
+  .legend span { display:flex; align-items:center; gap:6px; }
+  .key { width:13px; height:13px; border-radius:3px; border:1px solid; }
+  .key.user { background:var(--blue-soft); border-color:#8fb2ea; }
+  .key.agent { background:var(--violet-soft); border-color:#ae9ee8; }
+  .key.rule { background:var(--amber-soft); border-color:#dfb455; }
+  .key.human { background:var(--green-soft); border-color:#7cc8aa; }
+  .key.stop { background:var(--red-soft); border-color:#dd8c85; }
+
+  .workflow {
+    padding:25px 28px 30px;
+    overflow-x:auto;
+  }
+
+  .lane {
+    min-width:1180px;
+    display:grid;
+    grid-template-columns:130px 1fr;
+    border:1px solid var(--line);
+    border-bottom:0;
+  }
+
+  .lane:last-child { border-bottom:1px solid var(--line); }
+
+  .lane-title {
+    background:#f2f6fa;
+    border-right:1px solid var(--line);
+    padding:16px 12px;
+    text-align:center;
+    color:#42536b;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .lane-content {
+    position:relative;
+    min-height:112px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:28px;
+  }
+
+  .node {
+    position:relative;
+    width:174px;
+    min-height:70px;
+    border:1px solid;
+    border-radius:7px;
+    padding:11px 12px;
+    background:white;
+    flex:0 0 auto;
+  }
+
+  .node b {
+    display:block;
+    font-size:11px;
+    margin-bottom:4px;
+  }
+
+  .node small {
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    line-height:1.4;
+  }
+
+  .node.user { border-color:#8fb2ea; background:var(--blue-soft); }
+  .node.agent { border-color:#ae9ee8; background:var(--violet-soft); }
+  .node.rule { border-color:#dfb455; background:var(--amber-soft); }
+  .node.human { border-color:#7cc8aa; background:var(--green-soft); }
+  .node.stop { border-color:#dd8c85; background:var(--red-soft); }
+
+  .node::after {
+    content:"";
+    position:absolute;
+    right:-22px;
+    top:50%;
+    width:15px;
+    border-top:2px solid #7990ac;
+  }
+
+  .node::before {
+    content:"";
+    position:absolute;
+    right:-24px;
+    top:calc(50% - 4px);
+    border-left:6px solid #7990ac;
+    border-top:4px solid transparent;
+    border-bottom:4px solid transparent;
+  }
+
+  .node.last::after,
+  .node.last::before { display:none; }
+
+  .fork {
+    display:grid;
+    grid-template-columns:repeat(2, 190px);
+    gap:8px 18px;
+    position:relative;
+  }
+
+  .fork .node { width:190px; }
+  .fork .node::after,
+  .fork .node::before { display:none; }
+
+  .fork-label {
+    grid-column:1/-1;
+    text-align:center;
+    font-size:9px;
+    color:var(--violet);
+    font-weight:900;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  .decision {
+    width:112px;
+    height:78px;
+    transform:rotate(45deg);
+    border:1px solid #dfb455;
+    background:var(--amber-soft);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+  }
+
+  .decision span {
+    transform:rotate(-45deg);
+    width:88px;
+    text-align:center;
+    font-size:9px;
+    font-weight:900;
+    line-height:1.25;
+  }
+
+  .branches {
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:12px;
+    width:100%;
+  }
+
+  .branch {
+    border-top:4px solid;
+    border-radius:7px;
+    padding:12px;
+    min-height:82px;
+    background:#fff;
+    box-shadow:0 2px 8px rgba(22,49,83,.07);
+  }
+
+  .branch b { font-size:10px; display:block; margin-bottom:4px; }
+  .branch small { font-size:9px; color:var(--muted); }
+  .exact { border-color:var(--green); }
+  .tolerance { border-color:var(--blue); }
+  .suggested { border-color:#d58b17; }
+  .exception { border-color:var(--red); }
+
+  .outcomes {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    width:100%;
+    gap:18px;
+  }
+
+  .outcome {
+    border:1px solid var(--line);
+    background:white;
+    border-radius:7px;
+    padding:14px;
+  }
+
+  .outcome h3 {
+    margin:0 0 9px;
+    font-size:11px;
+  }
+
+  .outcome-list {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+
+  .pill {
+    border-radius:5px;
+    padding:8px;
+    background:#f3f6fa;
+    font-size:9px;
+    color:#52647b;
+  }
+
+  .audit {
+    background:var(--navy);
+    color:white;
+    padding:18px 24px;
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:22px;
+    align-items:center;
+  }
+
+  .audit h2 {
+    font-size:12px;
+    margin:0 0 4px;
+  }
+
+  .audit p {
+    color:#aabdd8;
+    font-size:9px;
+    margin:0;
+  }
+
+  .audit-events {
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+
+  .audit-events span {
+    padding:6px 8px;
+    background:#ffffff13;
+    border:1px solid #ffffff25;
+    border-radius:4px;
+    font-size:8px;
+    color:#dbe8f9;
+  }
+
+  .footer {
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:12px;
+    padding:15px 28px;
+    background:#f8fafc;
+    border-top:1px solid var(--line);
+  }
+
+  .constraint {
+    border-left:3px solid var(--red);
+    padding:7px 10px;
+    font-size:9px;
+    color:#506078;
+  }
+
+  .constraint b {
+    display:block;
+    color:var(--ink);
+    margin-bottom:2px;
+  }
+
+  @media(max-width:760px) {
+    header { align-items:flex-start; flex-direction:column; }
+    .simulation { white-space:normal; }
+    .footer { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div>
+      <h1>Autonomous Banking Reconciliation Platform</h1>
+      <p>End-to-end application workflow · Rules-based tolerance matching · Session-only prototype</p>
+    </div>
+    <div class="simulation">SIMULATION · SYNTHETIC DATA ONLY · NO FINANCIAL POSTING</div>
+  </header>
+
+  <div class="legend">
+    <span><i class="key user"></i>User or application action</span>
+    <span><i class="key agent"></i>Lyzr agent processing</span>
+    <span><i class="key rule"></i>Rule or decision gate</span>
+    <span><i class="key human"></i>Human-controlled action</span>
+    <span><i class="key stop"></i>Exception or blocked action</span>
+  </div>
+
+  <section class="workflow">
+    <div class="lane">
+      <div class="lane-title">1 · Entry</div>
+      <div class="lane-content">
+        <div class="node user">
+          <b>Executive Dashboard</b>
+          <small>View synthetic KPIs, open exceptions, approvals, and recent runs.</small>
+        </div>
+        <div class="node user">
+          <b>Start reconciliation</b>
+          <small>Open File Upload or load the bundled synthetic sample pack.</small>
+        </div>
+        <div class="node rule last">
+          <b>Safety boundary</b>
+          <small>Confirm synthetic data only. No bank, payment rail, or ledger connection.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">2 · Ingestion</div>
+      <div class="lane-content">
+        <div class="node user">
+          <b>Select source type</b>
+          <small>Classify each file as an invoice source or payment source.</small>
+        </div>
+        <div class="node user">
+          <b>Upload files</b>
+          <small>CSV, Excel, or PDF through native Lyzr asset upload.</small>
+        </div>
+        <div class="decision"><span>File type and upload valid?</span></div>
+        <div class="node stop">
+          <b>No · Block file</b>
+          <small>Show validation error and allow removal or replacement.</small>
+        </div>
+        <div class="node user last">
+          <b>Yes · Create run</b>
+          <small>Associate returned asset IDs with the session reconciliation run.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">3 · AI extraction</div>
+      <div class="lane-content">
+        <div class="node agent">
+          <b>Reconciliation Orchestrator</b>
+          <small>Loads session rules, identifies source types, and delegates extraction.</small>
+        </div>
+        <div class="fork">
+          <div class="fork-label">Parallel source-specific delegation</div>
+          <div class="node agent">
+            <b>Invoice Extraction Agent</b>
+            <small>Invoice number, vendor, date, amount, currency, status, and evidence.</small>
+          </div>
+          <div class="node agent">
+            <b>Payment Extraction Agent</b>
+            <small>Payment reference, payee, date, amount, currency, status, and evidence.</small>
+          </div>
+        </div>
+        <div class="node user last">
+          <b>Invoice Processing</b>
+          <small>Review extracted fields, validation flags, evidence, and session corrections.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">4 · Validation</div>
+      <div class="lane-content">
+        <div class="node rule">
+          <b>Normalize records</b>
+          <small>Standardize dates, vendor names, references, currencies, and decimals.</small>
+        </div>
+        <div class="node rule">
+          <b>Required fields</b>
+          <small>Check identifiers, amount, currency, date, and transaction status.</small>
+        </div>
+        <div class="node rule">
+          <b>Duplicate detection</b>
+          <small>Compare reference, amount, currency, and near-date clusters.</small>
+        </div>
+        <div class="decision"><span>Record eligible for matching?</span></div>
+        <div class="node stop last">
+          <b>No · Create exception</b>
+          <small>Missing data, duplicate, invalid status, or unsupported currency.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">5 · Reconciliation</div>
+      <div class="lane-content" style="flex-direction:column;align-items:stretch">
+        <div style="display:flex;justify-content:center;gap:28px;align-items:center">
+          <div class="node rule">
+            <b>Candidate scoring</b>
+            <small>Reference, vendor, currency, amount variance, date variance, and status.</small>
+          </div>
+          <div class="node rule last">
+            <b>Apply session rules</b>
+            <small>0.50% amount tolerance, 100 cap, 3-day window, and confidence thresholds.</small>
+          </div>
+        </div>
+        <div class="branches">
+          <div class="branch exact">
+            <b>Exact match</b>
+            <small>All required matching fields agree. Mark reconciled in session.</small>
+          </div>
+          <div class="branch tolerance">
+            <b>Tolerance match</b>
+            <small>Variance is within policy and confidence is at least 95%.</small>
+          </div>
+          <div class="branch suggested">
+            <b>Suggested match</b>
+            <small>Confidence is 70–94%. Human review is mandatory.</small>
+          </div>
+          <div class="branch exception">
+            <b>Exception</b>
+            <small>No valid candidate, policy breach, duplicate, or confidence below 70%.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">6 · Investigation</div>
+      <div class="lane-content">
+        <div class="node stop">
+          <b>Exception Management</b>
+          <small>Triage reason, severity, source evidence, variance, and failed rules.</small>
+        </div>
+        <div class="node agent">
+          <b>Suggested resolution</b>
+          <small>AI proposes next steps with confidence and supporting rule evidence.</small>
+        </div>
+        <div class="node human">
+          <b>Analyst investigation</b>
+          <small>Add notes, correct session data, accept guidance, or propose a resolution.</small>
+        </div>
+        <div class="decision"><span>Sensitive or uncertain?</span></div>
+        <div class="node human last">
+          <b>Route to Approval Centre</b>
+          <small>Required for suggestions, duplicates, overrides, policy breaches, and high value.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">7 · Human approval</div>
+      <div class="lane-content">
+        <div class="node human">
+          <b>Approver reviews evidence</b>
+          <small>Compare source records, rule results, confidence, risk, and analyst notes.</small>
+        </div>
+        <div class="node rule">
+          <b>Mandatory decision note</b>
+          <small>Require rationale and confirm the action is simulation-only.</small>
+        </div>
+        <div class="outcomes">
+          <div class="outcome">
+            <h3>Approve or reject simulated match</h3>
+            <div class="outcome-list">
+              <div class="pill">Approve → session status becomes reconciled</div>
+              <div class="pill">Reject → retain or create exception</div>
+              <div class="pill">Return → analyst queue with feedback</div>
+            </div>
+          </div>
+          <div class="outcome" style="border-color:#dd8c85;background:var(--red-soft)">
+            <h3>Hard safety stop</h3>
+            <div class="outcome-list">
+              <div class="pill">No payment release</div>
+              <div class="pill">No balance change</div>
+              <div class="pill">No ledger posting</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-title">8 · Outputs</div>
+      <div class="lane-content">
+        <div class="node user">
+          <b>Reports & Analytics</b>
+          <small>Reconciliation trends, exception taxonomy, currency, and vendor summaries.</small>
+        </div>
+        <div class="node user">
+          <b>Synthetic exports</b>
+          <small>Reconciliation, exceptions, approvals, audit CSV, and print summary.</small>
+        </div>
+        <div class="node user">
+          <b>AI Agent Operations</b>
+          <small>Connection, active agent, execution events, confidence, and tool calls.</small>
+        </div>
+        <div class="node user last">
+          <b>Reset workspace</b>
+          <small>Clear uploads and decisions, then restore synthetic data and default rules.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="audit">
+    <div>
+      <h2>Continuous session audit trail</h2>
+      <p>Every important step appends an in-memory event visible in Audit History.</p>
+    </div>
+    <div class="audit-events">
+      <span>FILE UPLOADED</span>
+      <span>EXTRACTION COMPLETED</span>
+      <span>VALIDATION FLAGGED</span>
+      <span>RULE CHANGED</span>
+      <span>MATCH CLASSIFIED</span>
+      <span>EXCEPTION CREATED</span>
+      <span>AI RECOMMENDATION</span>
+      <span>HUMAN NOTE</span>
+      <span>DECISION RECORDED</span>
+      <span>REPORT EXPORTED</span>
+      <span>WORKSPACE RESET</span>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="constraint">
+      <b>Session-only state</b>
+      Refreshing or resetting clears uploads, corrections, decisions, settings, and audit history.
+    </div>
+    <div class="constraint">
+      <b>Simulated roles</b>
+      Analyst, Approver, and Auditor views demonstrate workflow behavior but are not authentication.
+    </div>
+    <div class="constraint">
+      <b>No financial connectivity</b>
+      The application cannot connect to bank accounts, release funds, modify balances, or post ledger entries.
+    </div>
+  </footer>
+</main>
+</body>
+</html>
