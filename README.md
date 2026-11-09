@@ -10,11 +10,11 @@ Manual reconciliation often requires employees to compare invoice and payment re
 
 ## Architecture
 
-![Prototype architecture](docs/architecture.svg)
+![Prototype architecture](https://raw.githubusercontent.com/98Pavan/autonomous-banking-reconciliation-platform/main/docs/architecture.svg)
 
 ## Reconciliation workflow
 
-![Reconciliation workflow](docs/reconciliation-workflow.svg)
+![Reconciliation workflow](https://raw.githubusercontent.com/98Pavan/autonomous-banking-reconciliation-platform/main/docs/reconciliation-workflow.svg)
 
 ## Key Features
 
